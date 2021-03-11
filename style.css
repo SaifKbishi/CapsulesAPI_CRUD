@@ -1,0 +1,17 @@
+*{
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+}
+body{
+ margin: 10px;
+}
+th{
+ min-width: 80px;
+}
+td{
+ text-align: center;
+}
+.toolsBar>*{
+ margin: 0 5px;
+}
