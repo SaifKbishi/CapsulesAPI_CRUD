@@ -6,12 +6,19 @@
 body{
  margin: 10px;
  font-size: 10px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
 }
 th{
  min-width: 60px;
 }
 td{
  text-align: center;
+}
+.toolsBar{
+ 
+ margin: 10px 0;
 }
 .toolsBar>*{
  margin: 0 5px;
@@ -23,7 +30,7 @@ td{
 }
 .cellBorder{
  border: 1px solid #333;
- border-radius: 5px;
+ border-radius: 2px;
  background: khaki;
 }
 .noBorderForRow{

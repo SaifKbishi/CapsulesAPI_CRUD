@@ -8,12 +8,13 @@ const table = document.createElement('table');
 const tableHeadStr = `<thead class="thead"><tr><th>id</th><th>First Name</th><th>Last Name</th><th>Capsule</th><th>Age</th><th>City</th><th>Gender</th><th>Hobby</th><th></th><th></th></tr></thead>`;
 const tbody = document.createElement('tbody');
 tbody.classList.add('mytable');
+const mytable = document.querySelector('.mytable');
 let rowState={
  rowIndex: 0,
  tempRow:'',
  inEditMode: false,
 }
-
+let searchState='';
 
 function createDropDownOption(elemType, textcontent, value){
  let newElement = document.createElement(elemType);
@@ -73,6 +74,7 @@ function createToolBarMenu(){
  searchField.type = 'search';
  searchField.id = 'searchSite';
  const dropdownMenu = document.createElement('select');
+ dropdownMenu.classList.add('dropDownList');
  //const elemName = createDropDownOption(elemType, textcontent, value, id, class);
  const optionFN = createDropDownOption('option', 'First Name', 'firstname');
  const optionLN = createDropDownOption('option', 'Last Name', 'lastname');
@@ -93,8 +95,32 @@ function createToolBarMenu(){
  dropdownMenu.insertAdjacentElement('beforeend',optionGender);
  dropdownMenu.insertAdjacentElement('beforeend',optionHobby);
  dropdownMenu.insertAdjacentElement('beforeend',optionCity);
- 
+ //dropdownMenu.addEventListener('onchange', ()=>dropDownChanged());
+ dropDownChanged();
+ search();
+
 }//createToolBarMenu
+
+function search(){
+ //mytable.innerHTML='';  
+ let searchText = document.querySelector('#searchSite');
+ let searchEntityFromDropDown = dropDownChanged();
+
+ searchText.addEventListener('keyup', (e)=>{
+  //console.log(e.currentTarget.value);
+
+  console.log(e.key);
+ });
+}
+
+function dropDownChanged(){
+ let dropDownList= document.querySelector('.dropDownList');
+ dropDownList.addEventListener('change', ()=>{
+  console.log('dropDownList.value:2 ',dropDownList.value);
+  return dropDownList.value;
+ }); 
+ 
+}
 
 
 function diplayData(){
@@ -140,7 +166,7 @@ function editDeleteBtnsAddEventListeners(allEditBtns, allDeleteBtns){
  });
 }//editDeleteBtnsAddEventListeners
 
-function editRow(index){
+function editRow(index){ 
  console.log('index: ', index);
  let rowToEdit = tbody.rows[index];
  tempRow = rowToEdit;
@@ -155,7 +181,7 @@ function editRow(index){
   rowElems[i].classList.add('cellBorder');
   //console.log(rowElems[i]);
  }
-
+ 
  //console.log(tbody);
 }//editRow
 
@@ -165,8 +191,11 @@ function deletRow(index){
  rowToDelete.remove();
 }//deletRow
 
-
 function hideAnimation(){
  let animation = document.querySelector('.lds-spinner');
  animation.style.display= 'none';
-}
+}//hideAnimation
+
+/* function search(dropdownMenu){
+ //console.log('dropdownMenu: ',dropdownMenu);
+}//search */
