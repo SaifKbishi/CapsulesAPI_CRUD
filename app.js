@@ -95,33 +95,45 @@ function createToolBarMenu(){
  dropdownMenu.insertAdjacentElement('beforeend',optionGender);
  dropdownMenu.insertAdjacentElement('beforeend',optionHobby);
  dropdownMenu.insertAdjacentElement('beforeend',optionCity);
- //dropdownMenu.addEventListener('onchange', ()=>dropDownChanged());
- dropDownChanged();
+ //dropDownChanged();
  search();
 
 }//createToolBarMenu
 
 function search(){
- //mytable.innerHTML='';  
+ console.log('search start');
+ let str='';
+ let filteredPersonArray = [];
  let searchText = document.querySelector('#searchSite');
  let searchEntityFromDropDown = dropDownChanged();
-
- searchText.addEventListener('keyup', (e)=>{
-  //console.log(e.currentTarget.value);
-
-  console.log(e.key);
+ searchText.addEventListener('keyup', (e)=>{  
+  filteredPersonArray = [];
+  str = searchText.value.toLowerCase();
+  console.log(str);
+  for(let i=0; i<personDataArray.length; i++){
+   //console.log(`${personDataArray[i].lastName}`); //this should be pulled from the dropdown
+   let searchEntitiy = personDataArray[i].lastName.toLowerCase();
+    if(searchEntitiy.includes(str)){
+    filteredPersonArray.push(personDataArray[i]);
+   }
+  }
+  console.log('filteredPersonArray: ',filteredPersonArray);
  });
-}
+ console.log('filteredPersonArray: ',filteredPersonArray);
+ return filteredPersonArray;
+}//search
 
 function dropDownChanged(){
- let dropDownList= document.querySelector('.dropDownList');
+ let dropDownList= document.querySelector('.dropDownList'); 
  dropDownList.addEventListener('change', ()=>{
   console.log('dropDownList.value:2 ',dropDownList.value);
+  //return dropDownList.value;
+ });  
+ if(dropDownList.value){
+  console.log('dropDownList.value3: ',dropDownList.value);
   return dropDownList.value;
- }); 
- 
-}
-
+ }
+}//dropDownChanged
 
 function diplayData(){
  hideAnimation();
