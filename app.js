@@ -1,5 +1,3 @@
-console.log('CapsulesAPI_CRUD');
-
 const BaseEndpoint= 'https://apple-seeds.herokuapp.com/api/users/';
 const personDataArray = [];
 const toolsBar = document.querySelector('.toolsBar');
@@ -25,6 +23,7 @@ function createDropDownOption(elemType, textcontent, value){
 
 createToolBarMenu();
 getPersonDataFromApi();
+createTableHeader();
 
 //generic function for fetching URL
 async function fetchAnyURL(url){
@@ -62,7 +61,8 @@ async function getPersonDataFromApi(){
    };
    personDataArray.push(dataObj);
    }
-  diplayData();
+  //diplayData();
+  diplayData(personDataArray);
  } 
  catch(error){console.log(`${error}, Could not fetch person data from ${BaseEndpoint}`);}
 }//getPersonDataFromApi
@@ -95,13 +95,11 @@ function createToolBarMenu(){
  dropdownMenu.insertAdjacentElement('beforeend',optionGender);
  dropdownMenu.insertAdjacentElement('beforeend',optionHobby);
  dropdownMenu.insertAdjacentElement('beforeend',optionCity);
- //dropDownChanged();
  search();
 
 }//createToolBarMenu
 
 function search(){
- console.log('search start');
  let str='';
  let filteredPersonArray = [];
  let searchText = document.querySelector('#searchSite');
@@ -117,10 +115,9 @@ function search(){
     filteredPersonArray.push(personDataArray[i]);
    }
   }
-  console.log('filteredPersonArray: ',filteredPersonArray);
- });
- console.log('filteredPersonArray: ',filteredPersonArray);
- return filteredPersonArray;
+  console.log('filteredPersonArray:1 ',filteredPersonArray);
+  diplayData(filteredPersonArray);
+ }); 
 }//search
 
 function dropDownChanged(){
@@ -135,45 +132,36 @@ function dropDownChanged(){
  }
 }//dropDownChanged
 
-function diplayData(){
- hideAnimation();
+ function diplayData(array){    
+ hideAnimation(); 
  try{
-  personData.insertAdjacentElement('afterbegin', table);
-  table.insertAdjacentHTML('afterbegin', tableHeadStr);
-  let tableHead = document.querySelector('.thead');
-  tableHead.insertAdjacentElement('afterend', tbody);
- 
-  for(let i=0; i<personDataArray.length; i++){
-   //tbody.insertAdjacentHTML('beforeend',displayARow(i));
+   tbody.innerHTML='';
+  for(let i=0; i<array.length; i++){
    tbody.insertAdjacentHTML('beforeend',`<tr>
-   <td>${personDataArray[i].id}</td>
-   <td data-type="fname">${personDataArray[i].firstName}</td>
-   <td data-type="lname">${personDataArray[i].lastName}</td>
-   <td data-type="capsule">${personDataArray[i].capsule}</td>
-   <td data-type="age">${personDataArray[i].age}</td>
-   <td data-type="city">${personDataArray[i].city}</td>
-   <td data-type="gender">${personDataArray[i].gender}</td>
-   <td data-type="hobby">${personDataArray[i].hobby}</td>
+   <td>${array[i].id}</td>
+   <td data-type="fname">${array[i].firstName}</td>
+   <td data-type="lname">${array[i].lastName}</td>
+   <td data-type="capsule">${array[i].capsule}</td>
+   <td data-type="age">${array[i].age}</td>
+   <td data-type="city">${array[i].city}</td>
+   <td data-type="gender">${array[i].gender}</td>
+   <td data-type="hobby">${array[i].hobby}</td>
    <td data-type="editBtn"><button class="editBtn btn">Edit</button></td>
    <td data-type="deleteBtn"><button class="deleteBtn btn">Delete</button></td>
   </tr>`);
   }//for
   const allEditBtns = document.querySelectorAll('.editBtn');  
   const allDeleteBtns = document.querySelectorAll('.deleteBtn');
-  //console.log('allEditBtns: ',allEditBtns);
   editDeleteBtnsAddEventListeners(allEditBtns, allDeleteBtns);
  }catch(error){console.log(`${error}, could not display table`);} 
 }//diplayData
 
 function editDeleteBtnsAddEventListeners(allEditBtns, allDeleteBtns){
  allEditBtns.forEach((editBtnElem,index) => {
-  //console.log(editBtnElem);
-  //editBtnElem.addEventListener('click',()=> editRow(index));
   editBtnElem.addEventListener('click',()=> editRow(index));  
  });
 
  allDeleteBtns.forEach((DeleteBtnElem,index) => {
-  //console.log(DeleteBtnElem);
   DeleteBtnElem.addEventListener('click',()=> deletRow(index));
  });
 }//editDeleteBtnsAddEventListeners
@@ -191,23 +179,21 @@ function editRow(index){
  for(let i=1; i<rowElems.length-2; i++){
   rowElems[i].contentEditable= "true";
   rowElems[i].classList.add('cellBorder');
-  //console.log(rowElems[i]);
  }
- 
- //console.log(tbody);
 }//editRow
 
 function deletRow(index){
- console.log('index: ', index);
  let rowToDelete = tbody.rows[index];
  rowToDelete.remove();
 }//deletRow
 
 function hideAnimation(){
- let animation = document.querySelector('.lds-spinner');
- animation.style.display= 'none';
+ document.querySelector('.lds-spinner').style.display= 'none';
 }//hideAnimation
 
-/* function search(dropdownMenu){
- //console.log('dropdownMenu: ',dropdownMenu);
-}//search */
+function createTableHeader(){
+ personData.insertAdjacentElement('afterbegin', table);
+ table.insertAdjacentHTML('afterbegin', tableHeadStr);
+ let tableHead = document.querySelector('.thead');
+ tableHead.insertAdjacentElement('afterend', tbody);
+}//createTableHeader
