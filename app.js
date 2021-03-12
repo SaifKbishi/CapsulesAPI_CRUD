@@ -96,7 +96,6 @@ function createToolBarMenu(){
  dropdownMenu.insertAdjacentElement('beforeend',optionHobby);
  dropdownMenu.insertAdjacentElement('beforeend',optionCity);
  search();
-
 }//createToolBarMenu
 
 function search(){
