@@ -71,10 +71,10 @@ tr{
   background-color:#4095c6;
  }
  @media all and (max-width:30em){
-  .btn{
+  .btn{
    display:block;
    margin:0.2em auto;
-  }
+  }
  }
 
 

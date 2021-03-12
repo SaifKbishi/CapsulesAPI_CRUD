@@ -1,4 +1,5 @@
 const BaseEndpoint= 'https://apple-seeds.herokuapp.com/api/users/';
+localStorage.setItem("data", JSON.stringify([]));
 const personDataArray = [];
 const toolsBar = document.querySelector('.toolsBar');
 const personData = document.querySelector('.personData');
@@ -131,10 +132,10 @@ function dropDownChanged(){
  }
 }//dropDownChanged
 
- function diplayData(array){    
+function diplayData(array = personDataArray){    
  hideAnimation(); 
  try{
-   tbody.innerHTML='';
+  tbody.innerHTML = '';
   for(let i=0; i<array.length; i++){
    tbody.insertAdjacentHTML('beforeend',`<tr>
    <td>${array[i].id}</td>
@@ -165,11 +166,9 @@ function editDeleteBtnsAddEventListeners(allEditBtns, allDeleteBtns){
  });
 }//editDeleteBtnsAddEventListeners
 
-function editRow(index){ 
- console.log('index: ', index);
+function editRow(index){
  let rowToEdit = tbody.rows[index];
- tempRow = rowToEdit;
- //console.log(tbody.rows[index]);
+ tempRow = rowToEdit;//save the row data
  console.log('rowToEdit: ',rowToEdit);
  //tbody.rows[index].contentEditable= "true";
  //rowToEdit.contentEditable= "true";
@@ -179,11 +178,16 @@ function editRow(index){
   rowElems[i].contentEditable= "true";
   rowElems[i].classList.add('cellBorder');
  }
+ 
 }//editRow
 
 function deletRow(index){
- let rowToDelete = tbody.rows[index];
- rowToDelete.remove();
+ const myData = JSON.parse(localStorage.getItem("data"));
+ myData.splice(index, 1);
+ localStorage.setItem("data", JSON.stringify(myData));
+ diplayData();
+/*  let rowToDelete = tbody.rows[index];
+ rowToDelete.remove(); */
 }//deletRow
 
 function hideAnimation(){
