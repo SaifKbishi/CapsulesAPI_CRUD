@@ -160,8 +160,8 @@ function diplayData(array = personDataArray){
    <td data-type="city">${array[i].city}</td>
    <td data-type="gender">${array[i].gender}</td>
    <td data-type="hobby">${array[i].hobby}</td>
-   <td data-type="editBtn"><button class="editBtn btn">Edit</button>      <button class="cancelBtn btn" >Cancel</button></td>
-   <td data-type="deleteBtn"><button class="deleteBtn btn">Delete</button><button class="confirmBtn btn">Confirm</button></td>
+   <td data-type="editBtn"><button class="editBtn btn">Edit</button>      <button class="cancelBtn btn hidden" >Cancel</button></td>
+   <td data-type="deleteBtn"><button class="deleteBtn btn">Delete</button><button class="confirmBtn btn hidden">Confirm</button></td>
   </tr>`);
   }//for
  //});
@@ -186,121 +186,70 @@ function editDeleteBtnsAddEventListeners(allEditBtns, allCancelBtns, allDeleteBt
  allDeleteBtns.forEach((DeleteBtnElem,index) => {
   DeleteBtnElem.addEventListener('click',()=> deletRow(index));
  });
+ allConfirmBtns.forEach((confirmBtnElem,index) => {
+  confirmBtnElem.addEventListener('click',()=> confirmEditRow(index));
+ });
 }//editDeleteBtnsAddEventListeners
 
-function editCancelRow(index){
- if(rowState.inEditMode === false){//if can edit a row
-  let rowToEdit = tbody.rows[index];
-  let rowElems = rowToEdit.cells;
-  let edit_cancelBTNtemp = rowElems[8].firstElementChild;
-  let delete_confirmBTNtemp = rowElems[9].firstElementChild;
-  rowState.inEditMode = true; //disable edit other rows
-  rowState.tempRow = rowToEdit;//save the row data
-  edit_cancelBTNtemp.innerText = 'Cancel';
-  delete_confirmBTNtemp.innerText = 'Confirm';
-  rowToEdit.classList.add('noBorderForRow');  //remove the row border
-  for(let i=1; i<rowElems.length-2; i++){  //enable editing all text fields
-   rowElems[i].contentEditable= "true";
-   rowElems[i].classList.add('cellBorder');
-  }
-  edit_cancelBTNtemp.removeEventListener('click',editCancelRow);
-  edit_cancelBTNtemp.addEventListener('click',()=> editCancelRow(index));  //addEventListener('click',cancelEdit(index));
-  //remove edit addEventListener
-  //add cancel addEventListener
-  //change innerText back
-  //disable editing cells
-  //
- }else{
-  let editedRow = rowState.tempRow;
- rowState.inEditMode = false;
- let currentRow = tbody.rows[index];
- let rowElems = currentRow.cells;
- currentRow.replaceWith(editedRow);
- let edit_cancelBTNtemp = rowElems[8].firstElementChild;
-  let delete_confirmBTNtemp = rowElems[9].firstElementChild;  
-  edit_cancelBTNtemp.innerText = 'Edit';
-  delete_confirmBTNtemp.innerText = 'Delete';  
-  for(let i=1; i<rowElems.length-2; i++){  //enable editing all text fields
-   rowElems[i].contentEditable= "false";
-   rowElems[i].classList.remove('cellBorder');
-  }
- }
-
-
-}
-function cancelEdit(index){
- let editedRow = rowState.tempRow;
- rowState.inEditMode = false;
- let currentRow = tbody.rows[index];
- let rowElems = currentRow.cells;
- currentRow.replaceWith(editedRow);
- let edit_cancelBTNtemp = rowElems[8].firstElementChild;
-  let delete_confirmBTNtemp = rowElems[9].firstElementChild;  
-  edit_cancelBTNtemp.innerText = 'Edit';
-  delete_confirmBTNtemp.innerText = 'Delete';  
-  for(let i=1; i<rowElems.length-2; i++){  //enable editing all text fields
-   rowElems[i].contentEditable= "false";
-   rowElems[i].classList.remove('cellBorder');
-  }
-}
-
-function editRow(index){
+function editRow(index){ 
+ console.log('edit button clicked');
  let rowToEdit = tbody.rows[index];
  let rowElems = rowToEdit.cells;
- let edit_cancelBTNtemp = rowElems[8].firstElementChild;
- let delete_confirmBTNtemp = rowElems[9].firstElementChild;
-
  if(rowState.inEditMode === false){  
-  rowState.inEditMode = true; 
+  tbody.rows[index].cells[8].firstElementChild.classList.add('hidden');
+  tbody.rows[index].cells[8].lastElementChild.classList.remove('hidden');
+  tbody.rows[index].cells[9].firstElementChild.classList.add('hidden');
+  tbody.rows[index].cells[9].lastElementChild.classList.remove('hidden');
+  rowState.inEditMode = true;  
   rowState.tempRow = rowToEdit;//save the row data 
+  //rowState.tempRow = rowElems;//save the row data 
   rowToEdit.classList.add('noBorderForRow');  
   for(let i=1; i<rowElems.length-2; i++){
    rowElems[i].contentEditable= "true";
    rowElems[i].classList.add('cellBorder');
   }
-  edit_cancelBTNtemp.innerText = "Cancel";
-  delete_confirmBTNtemp.innerText = "Confirm";
  }else{
   console.log('you are editing another row');
+  return;
  }
-
- console.log('rowState.tempRow: ',rowState.tempRow);
- console.log('rowToEdit: ',rowToEdit);
- //tbody.rows[index].contentEditable= "true";
- //rowToEdit.contentEditable= "true";
-
- /* const Fname = updateFname.value;
- const Lname = updateLname.value;
- const capsule = updateCapsule.value;
- const age = updateAge.value;
- const city = updateCity.value;
- const gender = updateGender.value;
- const hobby = updateHobby .value;
- const myData = JSON.parse(localStorage.getItem("data"));
- myData[index] = {Fname, Lname, capsule, age, city, gender, hobby};
- localStorage.setItem("data", JSON.stringify(myData));
- updateFname.value = '';
- updateLname.value = '';
- updateCapsule.value = 0;
- updateAge.value = 0;
- updateCity.value = '';
- updateGender.value = '';
- updateHobby .value = '';
- diplayData(); */
 }//editRow
 
-function deletRow(index){
-/*  const myData = JSON.parse(localStorage.getItem("data"));
- myData.splice(index, 1);
- localStorage.setItem("data", JSON.stringify(myData));
- diplayData(); */
- let rowToDelete = tbody.rows[index];
- rowToDelete.remove();
-}//deletRow
+function cancelEditRow(index){
+/*  tbody.rows[index].cells[8].firstElementChild.classList.remove('hidden');
+ tbody.rows[index].cells[8].lastElementChild.classList.add('hidden');
+ tbody.rows[index].cells[9].firstElementChild.classList.remove('hidden');
+ tbody.rows[index].cells[9].lastElementChild.classList.add('hidden'); */
+ restoreButtons(index);
+ console.log('cancel button clicked');
+ tbody.rows[index]=rowState.tempRow;
+ let editedRow = rowState.tempRow;
+ console.log('editedRow', editedRow);
+ rowState.inEditMode = false;
+ let currentRow = tbody.rows[index];
+ let rowElems = currentRow.cells; 
+ console.log('rowElems',rowElems);
+ let edit_cancelBTNtemp = rowElems[8].firstElementChild;
+  let delete_confirmBTNtemp = rowElems[9].firstElementChild;  
+  edit_cancelBTNtemp.innerText = 'Edit';
+  delete_confirmBTNtemp.innerText = 'Delete';  
+  for(let i=1; i<rowElems.length-2; i++){  //enable editing all text fields
+   rowElems[i].contentEditable= "false";
+   rowElems[i].classList.remove('cellBorder');
+  }
+}//cancelEditRow
 
-function hideAnimation(){
- document.querySelector('.lds-spinner').style.display= 'none';
-}//hideAnimation
+const deletRow =(index)=>{tbody.rows[index].remove();}
+
+function confirmEditRow(index){
+ 
+}//confirmEditRow
+function restoreButtons(index){
+ tbody.rows[index].cells[8].firstElementChild.classList.remove('hidden');
+ tbody.rows[index].cells[8].lastElementChild.classList.add('hidden');
+ tbody.rows[index].cells[9].firstElementChild.classList.remove('hidden');
+ tbody.rows[index].cells[9].lastElementChild.classList.add('hidden');
+}
+const hideAnimation = ()=>{document.querySelector('.lds-spinner').style.display= 'none';}//hideAnimation 
 
 function createTableHeader(){
  personData.insertAdjacentElement('afterbegin', table);
