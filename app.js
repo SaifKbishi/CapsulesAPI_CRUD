@@ -85,26 +85,21 @@ function createToolBarMenu(){
  const dropdownMenu = document.createElement('select');
  dropdownMenu.classList.add('dropDownList');
  dropdownMenu.onchange = 'dropDownChanged()';
- //const elemName = createDropDownOption(elemType, textcontent, value, id, class);
  const optionFN = createDropDownOption('option', 'First Name', 'firstname');
  const optionLN = createDropDownOption('option', 'Last Name', 'lastname');
  const optionAge = createDropDownOption('option', 'Age', 'age');
  const optionCapsule = createDropDownOption('option', 'Capsule', 'capsule');
  const optionGender = createDropDownOption('option', 'Gender', 'gender');
  const optionHobby = createDropDownOption('option', 'Hobby', 'hobby');
- const optionCity = createDropDownOption('option', 'City', 'city');
-
+ const optionCity = createDropDownOption('option', 'City', 'city'); 
  toolsBar.insertAdjacentElement('afterbegin',searchLabel);
  searchLabel.insertAdjacentElement('afterend',searchField);
  searchField.insertAdjacentElement('afterend',dropdownMenu);
+ let dropDownOptions = [optionFN, optionLN, optionAge, optionCapsule, optionGender, optionHobby, optionCity];
+ for(let i=0; i< dropDownOptions.length; i++){
+  dropdownMenu.insertAdjacentElement('beforeend',dropDownOptions[i]);
+ }
 
- dropdownMenu.insertAdjacentElement('beforeend',optionFN);
- dropdownMenu.insertAdjacentElement('beforeend',optionLN);
- dropdownMenu.insertAdjacentElement('beforeend',optionAge);
- dropdownMenu.insertAdjacentElement('beforeend',optionCapsule);
- dropdownMenu.insertAdjacentElement('beforeend',optionGender);
- dropdownMenu.insertAdjacentElement('beforeend',optionHobby);
- dropdownMenu.insertAdjacentElement('beforeend',optionCity);
  search();
 }//createToolBarMenu
 
@@ -175,14 +170,11 @@ function diplayData(array = personDataArray){
 
 function editDeleteBtnsAddEventListeners(allEditBtns, allCancelBtns, allDeleteBtns, allConfirmBtns){
  allEditBtns.forEach((editBtnElem,index) => {
-  editBtnElem.addEventListener('click',()=> editRow(index));  
-  //editBtnElem.addEventListener('click',()=> editCancelRow(index));
+  editBtnElem.addEventListener('click',()=> editRow(index));
  });
  allCancelBtns.forEach((cacnelBtnElem,index) => {
-  cacnelBtnElem.addEventListener('click',()=> cancelEditRow(index));  
-  //editBtnElem.addEventListener('click',()=> editCancelRow(index));
+  cacnelBtnElem.addEventListener('click',()=> cancelEditRow(index));
  });
-
  allDeleteBtns.forEach((DeleteBtnElem,index) => {
   DeleteBtnElem.addEventListener('click',()=> deletRow(index));
  });
@@ -192,14 +184,10 @@ function editDeleteBtnsAddEventListeners(allEditBtns, allCancelBtns, allDeleteBt
 }//editDeleteBtnsAddEventListeners
 
 function editRow(index){ 
- console.log('edit button clicked');
  let rowToEdit = tbody.rows[index];
  let rowElems = rowToEdit.cells;
- if(rowState.inEditMode === false){  
-  tbody.rows[index].cells[8].firstElementChild.classList.add('hidden');
-  tbody.rows[index].cells[8].lastElementChild.classList.remove('hidden');
-  tbody.rows[index].cells[9].firstElementChild.classList.add('hidden');
-  tbody.rows[index].cells[9].lastElementChild.classList.remove('hidden');
+ if(rowState.inEditMode === false){
+  toggleButtons(index);
   rowState.inEditMode = true;  
   rowState.tempRow = rowToEdit;//save the row data 
   //rowState.tempRow = rowElems;//save the row data 
@@ -215,24 +203,14 @@ function editRow(index){
 }//editRow
 
 function cancelEditRow(index){
-/*  tbody.rows[index].cells[8].firstElementChild.classList.remove('hidden');
- tbody.rows[index].cells[8].lastElementChild.classList.add('hidden');
- tbody.rows[index].cells[9].firstElementChild.classList.remove('hidden');
- tbody.rows[index].cells[9].lastElementChild.classList.add('hidden'); */
- restoreButtons(index);
- console.log('cancel button clicked');
+ toggleButtons(index);
  tbody.rows[index]=rowState.tempRow;
  let editedRow = rowState.tempRow;
  console.log('editedRow', editedRow);
  rowState.inEditMode = false;
  let currentRow = tbody.rows[index];
  let rowElems = currentRow.cells; 
- console.log('rowElems',rowElems);
- let edit_cancelBTNtemp = rowElems[8].firstElementChild;
-  let delete_confirmBTNtemp = rowElems[9].firstElementChild;  
-  edit_cancelBTNtemp.innerText = 'Edit';
-  delete_confirmBTNtemp.innerText = 'Delete';  
-  for(let i=1; i<rowElems.length-2; i++){  //enable editing all text fields
+ for(let i=1; i<rowElems.length-2; i++){  //enable editing all text fields
    rowElems[i].contentEditable= "false";
    rowElems[i].classList.remove('cellBorder');
   }
@@ -241,14 +219,21 @@ function cancelEditRow(index){
 const deletRow =(index)=>{tbody.rows[index].remove();}
 
 function confirmEditRow(index){
- 
+ toggleButtons(index);
+ let rowElems = tbody.rows[index].cells;
+ rowState.inEditMode = false;
+ for(let i=1; i<rowElems.length-2; i++){  //enable editing all text fields
+  rowElems[i].contentEditable= "false";
+  rowElems[i].classList.remove('cellBorder');
+ }
 }//confirmEditRow
-function restoreButtons(index){
- tbody.rows[index].cells[8].firstElementChild.classList.remove('hidden');
- tbody.rows[index].cells[8].lastElementChild.classList.add('hidden');
- tbody.rows[index].cells[9].firstElementChild.classList.remove('hidden');
- tbody.rows[index].cells[9].lastElementChild.classList.add('hidden');
-}
+const toggleButtons = (index)=>{
+ tbody.rows[index].cells[8].firstElementChild.classList.toggle('hidden');
+ tbody.rows[index].cells[8].lastElementChild.classList.toggle('hidden');
+ tbody.rows[index].cells[9].firstElementChild.classList.toggle('hidden');
+ tbody.rows[index].cells[9].lastElementChild.classList.toggle('hidden');
+}//toggleButtons
+
 const hideAnimation = ()=>{document.querySelector('.lds-spinner').style.display= 'none';}//hideAnimation 
 
 function createTableHeader(){

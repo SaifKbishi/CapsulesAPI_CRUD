@@ -1,5 +1,6 @@
 //In this project,  
-//I will implement the CRUD concept while utilizing API features to display data about Bootcamp students.  
+//I will utilizing API features to display data about Bootcamp students.  
+//and try to implement the CRUD concept (based on free time)  
 //the project will include the following abilities:  
 //1. Filter by any column in the table live (while typing).  
 //2. Edit and delete rows with the possibility to regret before confirming the deletion.  
@@ -18,17 +19,15 @@
 //function diplayData(array = personDataArray)// takes a default array  
 //function editDeleteBtnsAddEventListeners(allEditBtns, allDeleteBtns)  
 //function editRow(index)  
+//function cancelEditRow(index)  
 //function deletRow(index)  
+//function confirmEditRow  
+//fuction toggleButtons  
 //function hideAnimation()  
 //function createTableHeader()  
 //  
-//should add an animation for loading DONE  
-//create a search function that filters the data with the filter value  
-//adjust the display function to take an array and display it filtered or not DONE  
-//a toggle button that is activated by default to fetch data from API or from localStorage  
+//  
+//  
 //use localStorage  
-//  
-//  
-//  
 //  
 //turn all functions to arrow functions  
