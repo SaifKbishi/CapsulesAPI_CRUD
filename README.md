@@ -31,15 +31,4 @@
 //  
 //  
 //  
-//  
-//  
-//  
-//  
-//  
-//  
-//  
-//  
-//  
-//  
-//  
 //turn all functions to arrow functions  

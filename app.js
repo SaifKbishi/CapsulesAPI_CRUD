@@ -8,6 +8,14 @@ const tableHeadStr = `<thead class="thead"><tr><th>id</th><th>First Name</th><th
 const tbody = document.createElement('tbody');
 tbody.classList.add('mytable');
 const mytable = document.querySelector('.mytable');
+const updateFname = document.querySelector("[data-type='fname']");
+const updateLname = document.querySelector("[data-type='lname']");
+const updateCapsule = document.querySelector("[data-type='capsule']");
+const updateAge = document.querySelector("[data-type='age']");
+const updateCity = document.querySelector("[data-type='city']");
+const updateGender = document.querySelector("[data-type='gender']");
+const updateHobby = document.querySelector("[data-type='hobby']");
+let searchEntityFromDropDown;
 let rowState={
  rowIndex: 0,
  tempRow:'',
@@ -20,7 +28,7 @@ function createDropDownOption(elemType, textcontent, value){
  newElement.textContent = textcontent;
  newElement.value = value;
  return newElement;
-}
+}//createDropDownOption
 
 createToolBarMenu();
 getPersonDataFromApi();
@@ -52,8 +60,8 @@ async function getPersonDataFromApi(){
    let personExtraDetails = await  getPersonExtraDetails(dataItem.id);
     let dataObj ={
      id: dataItem.id,
-     firstName: dataItem.firstName,
-     lastName: dataItem.lastName,
+     firstname: dataItem.firstName,
+     lastname: dataItem.lastName,
      capsule: dataItem.capsule,
      city: personExtraDetails.city, 
      gender: personExtraDetails.gender,
@@ -76,6 +84,7 @@ function createToolBarMenu(){
  searchField.id = 'searchSite';
  const dropdownMenu = document.createElement('select');
  dropdownMenu.classList.add('dropDownList');
+ dropdownMenu.onchange = 'dropDownChanged()';
  //const elemName = createDropDownOption(elemType, textcontent, value, id, class);
  const optionFN = createDropDownOption('option', 'First Name', 'firstname');
  const optionLN = createDropDownOption('option', 'Last Name', 'lastname');
@@ -99,21 +108,26 @@ function createToolBarMenu(){
  search();
 }//createToolBarMenu
 
+let filteredPersonArray = [];
 function search(){
  let str='';
- let filteredPersonArray = [];
- let searchText = document.querySelector('#searchSite');
- let searchEntityFromDropDown = dropDownChanged();
- searchText.addEventListener('keyup', (e)=>{  
+ let searchText = document.querySelector('#searchSite');  
+ searchText.addEventListener('keyup', (e)=>{
+  searchEntityFromDropDown = dropDownChanged();
   filteredPersonArray = [];
   str = searchText.value.toLowerCase();
-  console.log(str);
+  let searchEntitiy;
   for(let i=0; i<personDataArray.length; i++){
-   //console.log(`${personDataArray[i].lastName}`); //this should be pulled from the dropdown
-   let searchEntitiy = personDataArray[i].lastName.toLowerCase();
-    if(searchEntitiy.includes(str)){
-    filteredPersonArray.push(personDataArray[i]);
+   switch(searchEntityFromDropDown){
+    case 'firstname': searchEntitiy = personDataArray[i].firstname.toLowerCase();break;
+    case 'hobby': searchEntitiy = personDataArray[i].hobby.toLowerCase();break;
+    case 'lastname': searchEntitiy = personDataArray[i].lastname.toLowerCase();break;
+    case 'age': searchEntitiy = personDataArray[i].age.toString();break;
+    case 'capsule': searchEntitiy = personDataArray[i].capsule.toString();break;
+    case 'gender': searchEntitiy = personDataArray[i].gender.toLowerCase();break;
+    case 'city': searchEntitiy = personDataArray[i].city.toLowerCase();break;
    }
+    if(searchEntitiy.includes(str)){filteredPersonArray.push(personDataArray[i]); }
   }
   console.log('filteredPersonArray:1 ',filteredPersonArray);
   diplayData(filteredPersonArray);
@@ -124,10 +138,9 @@ function dropDownChanged(){
  let dropDownList= document.querySelector('.dropDownList'); 
  dropDownList.addEventListener('change', ()=>{
   console.log('dropDownList.value:2 ',dropDownList.value);
-  //return dropDownList.value;
+ // return dropDownList.value;
  });  
  if(dropDownList.value){
-  console.log('dropDownList.value3: ',dropDownList.value);
   return dropDownList.value;
  }
 }//dropDownChanged
@@ -136,11 +149,12 @@ function diplayData(array = personDataArray){
  hideAnimation(); 
  try{
   tbody.innerHTML = '';
+  //JSON.parse(localStorage.getItem("data")).forEach((person, index) => {
   for(let i=0; i<array.length; i++){
    tbody.insertAdjacentHTML('beforeend',`<tr>
    <td>${array[i].id}</td>
-   <td data-type="fname">${array[i].firstName}</td>
-   <td data-type="lname">${array[i].lastName}</td>
+   <td data-type="fname">${array[i].firstname}</td>
+   <td data-type="lname">${array[i].lastname}</td>
    <td data-type="capsule">${array[i].capsule}</td>
    <td data-type="age">${array[i].age}</td>
    <td data-type="city">${array[i].city}</td>
@@ -150,6 +164,7 @@ function diplayData(array = personDataArray){
    <td data-type="deleteBtn"><button class="deleteBtn btn">Delete</button></td>
   </tr>`);
   }//for
+ //});
   const allEditBtns = document.querySelectorAll('.editBtn');  
   const allDeleteBtns = document.querySelectorAll('.deleteBtn');
   editDeleteBtnsAddEventListeners(allEditBtns, allDeleteBtns);
@@ -178,16 +193,33 @@ function editRow(index){
   rowElems[i].contentEditable= "true";
   rowElems[i].classList.add('cellBorder');
  }
- 
+ /* const Fname = updateFname.value;
+ const Lname = updateLname.value;
+ const capsule = updateCapsule.value;
+ const age = updateAge.value;
+ const city = updateCity.value;
+ const gender = updateGender.value;
+ const hobby = updateHobby .value;
+ const myData = JSON.parse(localStorage.getItem("data"));
+ myData[index] = {Fname, Lname, capsule, age, city, gender, hobby};
+ localStorage.setItem("data", JSON.stringify(myData));
+ updateFname.value = '';
+ updateLname.value = '';
+ updateCapsule.value = 0;
+ updateAge.value = 0;
+ updateCity.value = '';
+ updateGender.value = '';
+ updateHobby .value = '';
+ diplayData(); */
 }//editRow
 
 function deletRow(index){
- const myData = JSON.parse(localStorage.getItem("data"));
+/*  const myData = JSON.parse(localStorage.getItem("data"));
  myData.splice(index, 1);
  localStorage.setItem("data", JSON.stringify(myData));
- diplayData();
-/*  let rowToDelete = tbody.rows[index];
- rowToDelete.remove(); */
+ diplayData(); */
+ let rowToDelete = tbody.rows[index];
+ rowToDelete.remove();
 }//deletRow
 
 function hideAnimation(){
@@ -200,3 +232,4 @@ function createTableHeader(){
  let tableHead = document.querySelector('.thead');
  tableHead.insertAdjacentElement('afterend', tbody);
 }//createTableHeader
+
