@@ -21,6 +21,7 @@ let rowState={
  rowIndex: 0,
  tempRow:'',
  inEditMode: false,
+ rowClone:'',
 }
 let searchState='';
 
@@ -183,8 +184,7 @@ function editRow(index){
  if(rowState.inEditMode === false){
   toggleButtons(index);
   rowState.inEditMode = true;  
-  rowState.tempRow = rowToEdit;//save the row data 
-  //rowState.tempRow = rowElems;//save the row data 
+  rowState.rowClone = tbody.rows[index].cloneNode(true);//save the row data
   rowToEdit.classList.add('noBorderForRow');  
   for(let i=1; i<rowElems.length-2; i++){
    rowElems[i].contentEditable= "true";
@@ -198,9 +198,7 @@ function editRow(index){
 
 function cancelEditRow(index){
  toggleButtons(index);
- tbody.rows[index]=rowState.tempRow;
- let editedRow = rowState.tempRow;
- console.log('editedRow', editedRow);
+ tbody.rows[index].replaceWith(rowState.rowClone);
  rowState.inEditMode = false;
  let currentRow = tbody.rows[index];
  let rowElems = currentRow.cells; 
