@@ -4,6 +4,7 @@ const personDataArray = [];
 const toolsBar = document.querySelector('.toolsBar');
 const personData = document.querySelector('.personData');
 const table = document.createElement('table');
+table.classList.add('tableToSort');
 const tableHeadStr = `<thead class="thead"><tr><th>id</th><th>First Name</th><th>Last Name</th><th>Capsule</th><th>Age</th><th>City</th><th>Gender</th><th>Hobby</th><th></th><th></th></tr></thead>`;
 const tbody = document.createElement('tbody');
 tbody.classList.add('mytable');
@@ -243,3 +244,36 @@ function createTableHeader(){
  tableHead.insertAdjacentElement('afterend', tbody);
 }//createTableHeader
 
+/********************************** */
+function sortTableByColumn(table, column, asc = true) {
+  const direction = asc ? 1 : -1;
+  const tBody = table.tBodies[0];
+  const rows = Array.from(tBody.querySelectorAll("tr"));
+
+  const sortedRows = rows.sort((a, b) => {
+      const aColText = a.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
+      const bColText = b.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
+
+      return aColText > bColText ? (1 * direction) : (-1 * direction);
+  });
+
+  while (tBody.firstChild) {
+      tBody.removeChild(tBody.firstChild);
+  }
+
+  tBody.append(...sortedRows);
+
+  table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
+  table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-asc", asc);
+  table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-desc", !asc);
+}
+
+document.querySelectorAll(".tableToSort th").forEach(headerCell => {
+  headerCell.addEventListener("click", () => {
+      const tableElement = headerCell.parentElement.parentElement.parentElement;
+      const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+      const currentIsAscending = headerCell.classList.contains("th-sort-asc");
+
+      sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+  });
+});

@@ -83,7 +83,10 @@ tr:focus, tr:active,.btn{
  .hidden{
   display: none;
  }
-
+ .table-sortable .th-sort-asc,
+ .table-sortable .th-sort-desc {
+   background: rgba(0, 0, 0, 0.1);
+ }
 
 
 /*loading animation*/
