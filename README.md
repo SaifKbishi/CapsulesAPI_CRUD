@@ -5,7 +5,7 @@
 //1. Filter by any column in the table live (while typing).  
 //2. Edit and delete rows with the possibility to regret before confirming the deletion.  
 //3. Use localStorage. --NOT DONE  
-//4. Sort the table by any column. --NOT DONE  
+//4. Sort the table by any column.  
 //  
 //  
 //the project will include the following functions:    
@@ -25,7 +25,7 @@
 //fuction toggleButtons  
 //function hideAnimation()  
 //function createTableHeader()  
-//  
+//sortTableByColumn(table, column, asc = true)  
 //  
 //  
 //use localStorage  

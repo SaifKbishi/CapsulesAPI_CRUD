@@ -16,7 +16,7 @@ const updateAge = document.querySelector("[data-type='age']");
 const updateCity = document.querySelector("[data-type='city']");
 const updateGender = document.querySelector("[data-type='gender']");
 const updateHobby = document.querySelector("[data-type='hobby']");
-let searchEntityFromDropDown;
+let filteredPersonArray = [];
 let rowState={
  rowIndex: 0,
  tempRow:'',
@@ -104,12 +104,11 @@ function createToolBarMenu(){
  search();
 }//createToolBarMenu
 
-let filteredPersonArray = [];
 function search(){
  let str='';
  let searchText = document.querySelector('#searchSite');  
  searchText.addEventListener('keyup', (e)=>{
-  searchEntityFromDropDown = dropDownChanged();
+  let searchEntityFromDropDown = dropDownChanged();
   filteredPersonArray = [];
   str = searchText.value.toLowerCase();
   let searchEntitiy;
@@ -131,14 +130,8 @@ function search(){
 }//search
 
 function dropDownChanged(){
- let dropDownList= document.querySelector('.dropDownList'); 
- dropDownList.addEventListener('change', ()=>{
-  console.log('dropDownList.value:2 ',dropDownList.value);
- // return dropDownList.value;
- });  
- if(dropDownList.value){
-  return dropDownList.value;
- }
+ let dropDownList= document.querySelector('.dropDownList');  
+ if(dropDownList.value){ return dropDownList.value; }
 }//dropDownChanged
 
 function diplayData(array = personDataArray){    
@@ -244,25 +237,19 @@ function createTableHeader(){
  tableHead.insertAdjacentElement('afterend', tbody);
 }//createTableHeader
 
-/********************************** */
 function sortTableByColumn(table, column, asc = true) {
   const direction = asc ? 1 : -1;
   const tBody = table.tBodies[0];
   const rows = Array.from(tBody.querySelectorAll("tr"));
-
   const sortedRows = rows.sort((a, b) => {
       const aColText = a.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
       const bColText = b.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
-
       return aColText > bColText ? (1 * direction) : (-1 * direction);
   });
-
   while (tBody.firstChild) {
       tBody.removeChild(tBody.firstChild);
   }
-
   tBody.append(...sortedRows);
-
   table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
   table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-asc", asc);
   table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-desc", !asc);
@@ -273,7 +260,6 @@ document.querySelectorAll(".tableToSort th").forEach(headerCell => {
       const tableElement = headerCell.parentElement.parentElement.parentElement;
       const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
       const currentIsAscending = headerCell.classList.contains("th-sort-asc");
-
       sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
   });
 });
